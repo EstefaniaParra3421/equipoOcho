@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#CC000000"
+    android:padding="8dp"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:clipToOutline="true"
+    android:layout_marginBottom="10dp">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:src="@mipmap/logo_inventory" />
+
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inventory"
+        android:textColor="#e7522e"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/txtQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Cuánto tengo de inventario?"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/txtBalance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$ ****"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:layout_below="@id/txtQuestion"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="4dp" />
+
+    <ImageView
+        android:id="@+id/iconEye"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/ic_menu_view"
+        android:tint="#FFFFFF"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/txtBalance"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/txtManage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gestionar inventario"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>
