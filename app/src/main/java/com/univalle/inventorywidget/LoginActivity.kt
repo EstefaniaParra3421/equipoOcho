@@ -32,7 +32,7 @@ class LoginActivity : FragmentActivity() {
         setContent {
             InventoryWidgetTheme {
                 LoginScreen(onAuthenticated = {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 })
             }
