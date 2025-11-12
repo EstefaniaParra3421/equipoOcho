@@ -18,11 +18,9 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
 
     private val repository = ProductRepository(db.productDao())
 
-    val allProducts = repository.allProducts.asLiveData()
+    val allProducts: LiveData<List<Product>> = repository.allProducts
 
-    fun insertProduct(product: Product) {
-        viewModelScope.launch {
-            repository.insert(product)
-        }
+    fun insertProduct(product: Product) = viewModelScope.launch {
+        repository.insert(product)
     }
 }

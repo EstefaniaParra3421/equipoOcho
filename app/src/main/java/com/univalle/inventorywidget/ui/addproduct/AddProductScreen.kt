@@ -1,6 +1,5 @@
 package com.univalle.inventorywidget.ui.addproduct
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -22,15 +21,13 @@ import com.univalle.inventorywidget.viewmodel.ProductViewModel
 @Composable
 fun AddProductScreen(
     navController: NavController,
-    viewModel: ProductViewModel = viewModel()
+    viewModel: ProductViewModel
 ) {
-    // Campos del formulario
     var code by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
 
-    // Validar que todos los campos estén llenos
     val isButtonEnabled =
         code.isNotBlank() && name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
 
@@ -71,13 +68,14 @@ fun AddProductScreen(
                 label = { Text("Código producto", color = Color.White) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Gray,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
                     focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    containerColor = Color.Transparent
+                    unfocusedLabelColor = Color.White
                 )
             )
 
@@ -91,13 +89,14 @@ fun AddProductScreen(
                 },
                 label = { Text("Nombre artículo", color = Color.White) },
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Gray,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
                     focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    containerColor = Color.Transparent
+                    unfocusedLabelColor = Color.White
                 )
             )
 
@@ -112,13 +111,14 @@ fun AddProductScreen(
                 label = { Text("Precio", color = Color.White) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Gray,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
                     focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    containerColor = Color.Transparent
+                    unfocusedLabelColor = Color.White
                 )
             )
 
@@ -133,13 +133,14 @@ fun AddProductScreen(
                 label = { Text("Cantidad", color = Color.White) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Gray,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
                     focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    containerColor = Color.Transparent
+                    unfocusedLabelColor = Color.White
                 )
             )
 
@@ -148,7 +149,6 @@ fun AddProductScreen(
             // Botón Guardar
             Button(
                 onClick = {
-                    // Crear el producto y guardarlo en la base de datos
                     val newProduct = Product(
                         code = code.toInt(),
                         name = name,
@@ -156,8 +156,6 @@ fun AddProductScreen(
                         quantity = quantity.toInt()
                     )
                     viewModel.insertProduct(newProduct)
-
-                    // Regresar a la pantalla Home
                     navController.popBackStack()
                 },
                 enabled = isButtonEnabled,

@@ -2,70 +2,33 @@ package com.univalle.inventorywidget
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.fragment.app.FragmentActivity
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.univalle.inventorywidget.ui.addproduct.AddProductScreen
+import androidx.compose.foundation.background
 
 class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            InventoryApp()
+            MainScreen()
         }
     }
 }
 
 @Composable
-fun InventoryApp() {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController = navController,
-        startDestination = "main_screen"
+fun MainScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF202020)),
+        contentAlignment = Alignment.Center
     ) {
-        composable("main_screen") {
-            MainScreen(onAddProductClick = {
-                navController.navigate("add_product_screen")
-            })
-        }
-
-        composable("add_product_screen") {
-            AddProductScreen(navController = navController)
-        }
-    }
-}
-
-@Composable
-fun MainScreen(onAddProductClick: () -> Unit) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddProductClick,
-                containerColor = Color(0xFFFF9800)
-            ) {
-                Text("+", color = Color.White)
-            }
-        },
-        containerColor = Color(0xFF202020)
-    ) { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(Color(0xFF202020)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Bienvenido al inventario", color = Color.White)
-        }
+        Text(text = "Bienvenido al inventario", color = Color.White)
     }
 }

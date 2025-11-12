@@ -47,7 +47,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     packaging {
@@ -68,8 +68,26 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.room.common.jvm)
     implementation(libs.androidx.compose.foundation)
+    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
+
+    // ROOM actualizado
+    implementation("androidx.room:room-runtime:2.7.0-alpha06")
+    implementation(libs.androidx.compose.runtime.livedata)
+    kapt("androidx.room:room-compiler:2.7.0-alpha06")
+    implementation("androidx.room:room-ktx:2.7.0-alpha06")
+
+    // ViewModels y LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
+
+    implementation("androidx.navigation:navigation-compose:2.8.4")
+
+    // Material y compatibilidad
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
 
     // Pruebas
     testImplementation(libs.junit)
@@ -99,6 +117,8 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
     implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.compose.material3:material3:1.3.0")
+
 
 
 }
