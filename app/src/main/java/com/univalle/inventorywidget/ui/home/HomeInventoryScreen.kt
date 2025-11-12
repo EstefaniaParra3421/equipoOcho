@@ -1,6 +1,7 @@
 package com.univalle.inventorywidget.ui.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,7 +24,7 @@ fun HomeInventoryScreen(
     navController: NavController,
     viewModel: ProductViewModel
 ) {
-    val products by viewModel.allProducts.observeAsState(emptyList())
+    val products by viewModel.allProducts.observeAsState(initial = null)
 
     Scaffold(
         topBar = {
@@ -58,40 +59,73 @@ fun HomeInventoryScreen(
                 .fillMaxSize()
                 .background(Color(0xCC000000))
         ) {
-            if (products.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color(0xFFFF9800))
+            when {
+                products == null -> {
+                    // Aún cargando
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color(0xFFFF9800))
+                    }
                 }
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    items(products) { product ->
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color.White)
+                products?.isEmpty() == true -> {
+                    // Sin productos
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            modifier = Modifier.padding(32.dp)
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column {
-                                    Text(product.name, color = Color.Black)
-                                    Text("ID: ${product.id}", color = Color.Gray)
+                            Text(
+                                text = "No hay productos",
+                                color = Color.White,
+                                style = MaterialTheme.typography.headlineSmall
+                            )
+                            Text(
+                                text = "Presiona el botón + para crear un nuevo producto",
+                                color = Color.Gray,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+                else -> {
+                    products?.let { productList ->
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp)
+                        ) {
+                            items(productList) { product ->
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp)
+                                        .clickable {
+                                            navController.navigate("product_detail_screen/${product.id}")
+                                        },
+                                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Column {
+                                            Text(product.name, color = Color.Black)
+                                            Text("ID: ${product.id}", color = Color.Gray)
+                                        }
+                                        Text(
+                                            text = "$ ${product.price}",
+                                            color = Color(0xFFFF9800)
+                                        )
+                                    }
                                 }
-                                Text(
-                                    text = "$ ${product.price}",
-                                    color = Color(0xFFFF9800)
-                                )
                             }
                         }
                     }

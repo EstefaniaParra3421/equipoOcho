@@ -23,4 +23,8 @@ class ProductViewModel(application: Application) : AndroidViewModel(application)
     fun insertProduct(product: Product) = viewModelScope.launch {
         repository.insert(product)
     }
+
+    fun deleteProduct(product: Product) = viewModelScope.launch {
+        repository.delete(product)
+    }
 }
