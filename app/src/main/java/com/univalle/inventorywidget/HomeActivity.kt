@@ -10,10 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.univalle.inventorywidget.ui.addproduct.AddProductScreen
+import com.univalle.inventorywidget.ui.detail.ProductDetailScreen
 import com.univalle.inventorywidget.ui.home.HomeInventoryScreen
 import com.univalle.inventorywidget.ui.theme.InventoryWidgetTheme
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
@@ -59,6 +62,21 @@ fun InventoryNavHost() {
         // HU 4.0: Agregar Producto
         composable("add_product_screen") {
             AddProductScreen(
+                navController = navController,
+                viewModel = sharedViewModel
+            )
+        }
+
+        // HU 5.0: Detalle del Producto
+        composable(
+            route = "product_detail_screen/{productId}",
+            arguments = listOf(
+                navArgument("productId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId") ?: -1
+            ProductDetailScreen(
+                productId = productId,
                 navController = navController,
                 viewModel = sharedViewModel
             )
