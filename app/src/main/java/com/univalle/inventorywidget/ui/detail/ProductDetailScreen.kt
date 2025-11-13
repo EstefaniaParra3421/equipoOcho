@@ -60,140 +60,140 @@ fun ProductDetailScreen(
         modifier = Modifier.fillMaxSize(),
         color = Color(0xFF000000) // Fondo negro
     ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Toolbar gris (#424242) con texto blanco "Detalle del producto" y flecha izquierda
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Detalle del producto",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Toolbar gris (#424242) con texto blanco "Detalle del producto" y flecha izquierda
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Detalle del producto",
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "Regresar",
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xFF424242) // Gris según criterio
+                    )
                 )
-            },
-            navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Regresar",
-                        tint = Color.White
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF424242) // Gris según criterio
-            )
-        )
-        
-        // Contenido principal
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            // Tarjeta blanca con bordes redondeados
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                shape = RoundedCornerShape(12.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
+                
+                // Contenido principal
                 Column(
-                    modifier = Modifier.padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
-                    // Nombre
-                    Text(
-                        text = "Nombre:",
-                        color = Color.Gray,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = product.name,
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    // Tarjeta blanca con bordes redondeados
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(20.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            // Nombre
+                            Text(
+                                text = "Nombre:",
+                                color = Color.Gray,
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                text = product.name,
+                                color = Color.Black,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            Divider(color = Color.LightGray)
+                            
+                            // Precio
+                            Text(
+                                text = "Precio:",
+                                color = Color.Gray,
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                text = "$$formattedPrice",
+                                color = Color.Black,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            Divider(color = Color.LightGray)
+                            
+                            // Cantidad
+                            Text(
+                                text = "Cantidad:",
+                                color = Color.Gray,
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                text = product.quantity.toString(),
+                                color = Color.Black,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            
+                            Divider(color = Color.LightGray)
+                            
+                            // Total (precio x cantidad)
+                            Text(
+                                text = "Total:",
+                                color = Color.Gray,
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                text = "$$formattedTotal",
+                                color = Color(0xFFFF7B00), // Naranja para destacar
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                     
-                    Divider(color = Color.LightGray)
-                    
-                    // Precio
-                    Text(
-                        text = "Precio:",
-                        color = Color.Gray,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "$$formattedPrice",
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    
-                    Divider(color = Color.LightGray)
-                    
-                    // Cantidad
-                    Text(
-                        text = "Cantidad:",
-                        color = Color.Gray,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = product.quantity.toString(),
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    
-                    Divider(color = Color.LightGray)
-                    
-                    // Total (precio x cantidad)
-                    Text(
-                        text = "Total:",
-                        color = Color.Gray,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "$$formattedTotal",
-                        color = Color(0xFFFF7B00), // Naranja para destacar
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    // Botón naranja "Eliminar"
+                    Button(
+                        onClick = { showDeleteDialog = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFFF7B00) // Naranja según criterio
+                        )
+                    ) {
+                        Text(
+                            text = "Eliminar",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
                 }
             }
             
-            // Botón naranja "Eliminar"
-            Button(
-                onClick = { showDeleteDialog = true },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF7B00) // Naranja según criterio
-                )
-            ) {
-                Text(
-                    text = "Eliminar",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
-            }
-        }
-        
-        // Ícono flotante naranja (inferior derecho) para editar
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomEnd
-        ) {
+            // Ícono flotante naranja (inferior derecho) para editar
             FloatingActionButton(
                 onClick = {
                     // TODO: Navegar a HU 6.0 (EditProductScreen)
-                    Toast.makeText(context, "Funcionalidad editar producto próximamente (HU 6.0)", Toast.LENGTH_SHORT).show()
+                    // Por ahora no hace nada, solo está preparado para la funcionalidad futura
                 },
                 containerColor = Color(0xFFFF7B00), // Naranja según criterio
                 contentColor = Color.White,
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(24.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -201,7 +201,6 @@ fun ProductDetailScreen(
                 )
             }
         }
-    }
     
     // Diálogo de confirmación para eliminar
     if (showDeleteDialog) {
