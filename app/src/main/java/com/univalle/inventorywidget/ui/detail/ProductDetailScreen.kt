@@ -186,8 +186,7 @@ fun ProductDetailScreen(
             // Ícono flotante naranja (inferior derecho) para editar
             FloatingActionButton(
                 onClick = {
-                    // TODO: Navegar a HU 6.0 (EditProductScreen)
-                    // Por ahora no hace nada, solo está preparado para la funcionalidad futura
+                    navController.navigate("edit_product_screen/${product.id}")
                 },
                 containerColor = Color(0xFFFF7B00), // Naranja según criterio
                 contentColor = Color.White,
