@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.univalle.inventorywidget.ui.addproduct.AddProductScreen
 import com.univalle.inventorywidget.ui.detail.ProductDetailScreen
+import com.univalle.inventorywidget.ui.editproduct.EditProductScreen
 import com.univalle.inventorywidget.ui.home.HomeInventoryScreen
 import com.univalle.inventorywidget.ui.theme.InventoryWidgetTheme
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
@@ -76,6 +77,21 @@ fun InventoryNavHost() {
         ) { backStackEntry ->
             val productId = backStackEntry.arguments?.getInt("productId") ?: -1
             ProductDetailScreen(
+                productId = productId,
+                navController = navController,
+                viewModel = sharedViewModel
+            )
+        }
+
+        // HU 6.0: Editar Producto
+        composable(
+            route = "edit_product_screen/{productId}",
+            arguments = listOf(
+                navArgument("productId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId") ?: -1
+            EditProductScreen(
                 productId = productId,
                 navController = navController,
                 viewModel = sharedViewModel
