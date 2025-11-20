@@ -6,25 +6,40 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/inventory_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/inventory_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.InventoryWidget">
+
+
+        <activity android:name=".HomeActivity" />
+
+        <activity android:name=".ProductDetailActivity" />
+        <!-- ✅ Pantalla de login (la primera que se abre) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.InventoryWidget">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".InventoryWidgetProvider" android:exported="true">
 
-        <intent-filter>
+        <!-- ✅ Actividad principal (sin intent-filter) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.InventoryWidget" />
+
+        <!-- ✅ Widget -->
+        <receiver
+            android:name=".InventoryWidgetProvider"
+            android:exported="true">
+            <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
@@ -32,6 +47,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/inventory_widget_info" />
         </receiver>
+
+
 
     </application>
 
