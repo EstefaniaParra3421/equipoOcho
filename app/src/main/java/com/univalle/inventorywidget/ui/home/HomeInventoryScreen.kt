@@ -1,5 +1,7 @@
 package com.univalle.inventorywidget.ui.home
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.univalle.inventorywidget.HomeActivity
+import com.univalle.inventorywidget.LoginActivity
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,10 +36,21 @@ fun HomeInventoryScreen(
                 title = { Text("Inventario", color = Color.White) },
                 actions = {
                     IconButton(onClick = {
-                        // navController.navigate("login_screen") { popUpTo(0) }
+                        val context = navController.context
+                        val activity = context as? HomeActivity
+
+                        // Borra autenticación
+                        val prefs = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
+                        prefs?.edit()?.putBoolean("authenticated", false)?.apply()
+
+                        // Ir al LoginActivity
+                        val intent = Intent(activity, LoginActivity::class.java)
+                        activity?.startActivity(intent)
+                        activity?.finish()
                     }) {
                         Icon(Icons.Default.Logout, contentDescription = "Cerrar sesión", tint = Color.White)
                     }
+
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF424242))
             )
