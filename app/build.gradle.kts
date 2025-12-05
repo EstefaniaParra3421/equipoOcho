@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.android.application")
+    id("com.google.gms.google-services")
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
@@ -60,6 +62,7 @@ android {
 dependencies {
 
     // Dependencias base de AndroidX y Compose
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
