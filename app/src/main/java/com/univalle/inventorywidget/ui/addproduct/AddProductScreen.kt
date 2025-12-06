@@ -74,6 +74,8 @@ fun AddProductScreen(
                     focusedIndicatorColor = Color.White,
                     unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
                     focusedLabelColor = Color.White,
                     unfocusedLabelColor = Color.White
                 )
@@ -95,6 +97,8 @@ fun AddProductScreen(
                     focusedIndicatorColor = Color.White,
                     unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
                     focusedLabelColor = Color.White,
                     unfocusedLabelColor = Color.White
                 )
@@ -117,6 +121,8 @@ fun AddProductScreen(
                     focusedIndicatorColor = Color.White,
                     unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
                     focusedLabelColor = Color.White,
                     unfocusedLabelColor = Color.White
                 )
@@ -139,6 +145,8 @@ fun AddProductScreen(
                     focusedIndicatorColor = Color.White,
                     unfocusedIndicatorColor = Color.Gray,
                     cursorColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
                     focusedLabelColor = Color.White,
                     unfocusedLabelColor = Color.White
                 )
