@@ -28,7 +28,8 @@ fun HomeInventoryScreen(
     navController: NavController,
     viewModel: ProductViewModel
 ) {
-    val products by viewModel.allProducts.observeAsState(initial = null)
+    //comentado porque ya no existen metodos en el viewmodel agregarlos usando firestone
+    //val products by viewModel.allProducts.observeAsState(initial = null)
 
     Scaffold(
         topBar = {
@@ -74,7 +75,7 @@ fun HomeInventoryScreen(
                 .fillMaxSize()
                 .background(Color(0xCC000000))
         ) {
-            when {
+            /*when {
                 products == null -> {
                     // Aún cargando
                     Box(
@@ -145,7 +146,7 @@ fun HomeInventoryScreen(
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }
