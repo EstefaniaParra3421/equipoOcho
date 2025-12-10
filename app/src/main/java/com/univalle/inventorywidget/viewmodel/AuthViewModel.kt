@@ -32,6 +32,8 @@ class AuthViewModel @Inject constructor(
      * Registra un nuevo usuario en Firebase
      */
     fun registerUser(userRequest: UserRequest) {
+        // Limpiar resultado anterior
+        _registerResult.value = null
         viewModelScope.launch {
             authRepository.registerUser(userRequest) { userResponse ->
                 _registerResult.value = userResponse
@@ -46,10 +48,14 @@ class AuthViewModel @Inject constructor(
      * Inicia sesión con email y contraseña
      */
     fun loginUser(email: String, password: String) {
-        authRepository.loginUser(email, password) { success, emailOrError ->
-            _loginResult.value = Pair(success, emailOrError)
-            if (success) {
-                _currentUserEmail.value = emailOrError
+        // Limpiar resultado anterior
+        _loginResult.value = null
+        viewModelScope.launch {
+            authRepository.loginUser(email, password) { success, emailOrError ->
+                _loginResult.value = Pair(success, emailOrError)
+                if (success) {
+                    _currentUserEmail.value = emailOrError
+                }
             }
         }
     }

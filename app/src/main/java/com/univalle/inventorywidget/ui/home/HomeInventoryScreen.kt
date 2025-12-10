@@ -15,19 +15,24 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.univalle.inventorywidget.HomeActivity
-import com.univalle.inventorywidget.LoginActivity
+import com.univalle.inventorywidget.LoginActivityWithFirebase
+import com.univalle.inventorywidget.viewmodel.AuthViewModel
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeInventoryScreen(
     navController: NavController,
-    viewModel: ProductViewModel
+    viewModel: ProductViewModel,
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    
     //comentado porque ya no existen metodos en el viewmodel agregarlos usando firestone
     //val products by viewModel.allProducts.observeAsState(initial = null)
 
@@ -37,17 +42,16 @@ fun HomeInventoryScreen(
                 title = { Text("Inventario", color = Color.White) },
                 actions = {
                     IconButton(onClick = {
-                        val context = navController.context
-                        val activity = context as? HomeActivity
-
-                        // Borra autenticación
-                        val prefs = activity?.getSharedPreferences("auth", Context.MODE_PRIVATE)
-                        prefs?.edit()?.putBoolean("authenticated", false)?.apply()
-
-                        // Ir al LoginActivity
-                        val intent = Intent(activity, LoginActivity::class.java)
-                        activity?.startActivity(intent)
-                        activity?.finish()
+                        // Cerrar sesión en Firebase
+                        authViewModel.logOut()
+                        
+                        // Navegar a la pantalla de login
+                        val intent = Intent(context, LoginActivityWithFirebase::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        context.startActivity(intent)
+                        
+                        // Finalizar la actividad actual
+                        (context as? HomeActivity)?.finish()
                     }) {
                         Icon(Icons.Filled.Logout, contentDescription = "Cerrar sesión", tint = Color.White)
                     }

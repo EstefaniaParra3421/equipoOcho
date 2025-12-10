@@ -63,7 +63,7 @@
             </intent-filter>
 
             <meta-data
-                android:name="android:appwidget.provider"
+                android:name="android.appwidget.provider"
                 android:resource="@xml/inventory_widget_info" />
         </receiver>
 

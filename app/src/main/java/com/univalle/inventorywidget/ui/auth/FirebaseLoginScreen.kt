@@ -46,15 +46,24 @@ fun FirebaseLoginScreen(
     
     val loginResult by authViewModel.loginResult.observeAsState()
     val registerResult by authViewModel.registerResult.observeAsState()
+    
+    // Variable para evitar múltiples ejecuciones del LaunchedEffect
+    var loginProcessed by remember { mutableStateOf(false) }
+    var registerProcessed by remember { mutableStateOf(false) }
 
     // Observar resultados del login
     LaunchedEffect(loginResult) {
         loginResult?.let { (success, message) ->
-            if (success) {
-                Toast.makeText(context, "Login exitoso", Toast.LENGTH_SHORT).show()
-                message?.let { onLoginSuccess(it) }
-            } else {
-                Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+            if (!loginProcessed) {
+                loginProcessed = true
+                if (success) {
+                    Toast.makeText(context, "Login exitoso", Toast.LENGTH_SHORT).show()
+                    message?.let { onLoginSuccess(it) }
+                } else {
+                    Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+                    // Resetear para permitir otro intento
+                    loginProcessed = false
+                }
             }
         }
     }
@@ -62,11 +71,23 @@ fun FirebaseLoginScreen(
     // Observar resultados del registro
     LaunchedEffect(registerResult) {
         registerResult?.let { result ->
-            Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-            if (result.isRegister) {
-                result.email?.let { onLoginSuccess(it) }
+            if (!registerProcessed) {
+                registerProcessed = true
+                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                if (result.isRegister) {
+                    result.email?.let { onLoginSuccess(it) }
+                } else {
+                    // Resetear para permitir otro intento
+                    registerProcessed = false
+                }
             }
         }
+    }
+    
+    // Resetear flags cuando cambia el modo (login/registro)
+    LaunchedEffect(isRegistering) {
+        loginProcessed = false
+        registerProcessed = false
     }
 
     Box(
