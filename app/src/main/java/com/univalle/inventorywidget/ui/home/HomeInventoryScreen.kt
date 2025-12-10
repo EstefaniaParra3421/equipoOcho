@@ -49,7 +49,7 @@ fun HomeInventoryScreen(
                         activity?.startActivity(intent)
                         activity?.finish()
                     }) {
-                        Icon(Icons.Default.Logout, contentDescription = "Cerrar sesión", tint = Color.White)
+                        Icon(Icons.Filled.Logout, contentDescription = "Cerrar sesión", tint = Color.White)
                     }
 
                 },
