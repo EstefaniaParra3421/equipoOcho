@@ -52,6 +52,9 @@ class LoginActivityWithFirebase : FragmentActivity() {
             return
         }
 
+        // Capturar referencia de la Activity para usar en lambdas
+        val activity = this
+        
         setContent {
             InventoryWidgetTheme {
                 var showFirebaseLogin by remember { mutableStateOf(false) }
@@ -61,16 +64,16 @@ class LoginActivityWithFirebase : FragmentActivity() {
                     FirebaseLoginScreen(
                         authViewModel = authViewModel,
                         onLoginSuccess = { email ->
-                            startActivity(Intent(this, HomeActivity::class.java))
-                            finish()
+                            activity.startActivity(Intent(activity, HomeActivity::class.java))
+                            activity.finish()
                         }
                     )
                 } else {
                     // Mostrar pantalla de login biométrico
                     BiometricLoginScreen(
                         onAuthenticated = {
-                            startActivity(Intent(this, HomeActivity::class.java))
-                            finish()
+                            activity.startActivity(Intent(activity, HomeActivity::class.java))
+                            activity.finish()
                         },
                         onUseEmailPassword = {
                             showFirebaseLogin = true

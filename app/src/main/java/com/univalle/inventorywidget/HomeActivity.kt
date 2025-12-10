@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,7 +21,9 @@ import com.univalle.inventorywidget.ui.editproduct.EditProductScreen
 import com.univalle.inventorywidget.ui.home.HomeInventoryScreen
 import com.univalle.inventorywidget.ui.theme.InventoryWidgetTheme
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,7 @@ class HomeActivity : ComponentActivity() {
 fun InventoryNavHost() {
     val navController: NavHostController = rememberNavController()
 
-    val sharedViewModel: ProductViewModel = viewModel()
+    val sharedViewModel: ProductViewModel = hiltViewModel()
 
     BackHandler {
         android.os.Process.killProcess(android.os.Process.myPid())
