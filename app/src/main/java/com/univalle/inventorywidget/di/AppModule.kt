@@ -1,8 +1,11 @@
 package com.univalle.inventorywidget.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.univalle.inventorywidget.data.datasource.FirebaseAuthDataSource
+import com.univalle.inventorywidget.data.datasource.ProductFirestoreDataSource
 import com.univalle.inventorywidget.data.repository.AuthRepository
+import com.univalle.inventorywidget.data.repository.ProductRepository
 import com.univalle.inventorywidget.domain.repository.AuthRepositoryImpl
 import com.univalle.inventorywidget.domain.usecase.LoginUseCase
 import com.univalle.inventorywidget.domain.usecase.RegisterUseCase
@@ -37,4 +40,19 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRegisterUseCase(repo: AuthRepository) = RegisterUseCase(repo)
+
+    @Provides
+    @Singleton
+    fun provideFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    @Provides
+    @Singleton
+    fun provideProductFirestoreDataSource(firestore: FirebaseFirestore) =
+        ProductFirestoreDataSource(firestore)
+
+    @Provides
+    @Singleton
+    fun provideProductRepository(ds: ProductFirestoreDataSource) =
+        ProductRepository(ds)
+
 }

@@ -252,7 +252,8 @@ fun ProductDetailScreen(
                             price = productPrice,
                             quantity = productQuantity
                         )
-                        viewModel.deleteProduct(product)
+                        //comentado porque ya no se usa room agregarf metodos al firestone
+                        //viewModel.deleteProduct(product)
                         Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
                         showDeleteDialog = false
                         onBack()

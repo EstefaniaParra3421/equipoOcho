@@ -29,13 +29,14 @@ fun ProductDetailScreen(
     navController: NavController,
     viewModel: ProductViewModel
 ) {
-    val products by viewModel.allProducts.observeAsState(initial = null)
-    val product = products?.find { it.id == productId }
+    // comentado porque ya no se usa room (agregar metodos al firestone)
+   // val products by viewModel.allProducts.observeAsState(initial = null)
+    //val product = products?.find { it.id == productId }
     val context = LocalContext.current
     
     var showDeleteDialog by remember { mutableStateOf(false) }
     
-    if (product == null) {
+   /* if (product == null) {
         // Producto no encontrado o aún cargando
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -44,16 +45,16 @@ fun ProductDetailScreen(
             CircularProgressIndicator(color = Color(0xFFFF9800))
         }
         return
-    }
+    }*/
     
     // Calcular total (precio x cantidad)
-    val total = product.price * product.quantity
+    val total = 0//product.price * product.quantity
     
     // Formatear números con separadores de miles
     val numberFormat = NumberFormat.getNumberInstance(Locale("es", "CO"))
     numberFormat.maximumFractionDigits = 2
     
-    val formattedPrice = numberFormat.format(product.price)
+    val formattedPrice = 0//numberFormat.format(product.price)
     val formattedTotal = numberFormat.format(total)
     
     Surface(
@@ -111,7 +112,7 @@ fun ProductDetailScreen(
                                 fontSize = 14.sp
                             )
                             Text(
-                                text = product.name,
+                                text = "",//product.name,
                                 color = Color.Black,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
@@ -141,7 +142,7 @@ fun ProductDetailScreen(
                                 fontSize = 14.sp
                             )
                             Text(
-                                text = product.quantity.toString(),
+                                text = "",//product.quantity.toString(),
                                 color = Color.Black,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
@@ -186,7 +187,7 @@ fun ProductDetailScreen(
             // Ícono flotante naranja (inferior derecho) para editar
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("edit_product_screen/${product.id}")
+                    //navController.navigate("edit_product_screen/${product.id}")
                 },
                 containerColor = Color(0xFFFF7B00), // Naranja según criterio
                 contentColor = Color.White,
@@ -217,7 +218,7 @@ fun ProductDetailScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.deleteProduct(product)
+                        //viewModel.deleteProduct(product)
                         Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
                         showDeleteDialog = false
                         navController.popBackStack()
