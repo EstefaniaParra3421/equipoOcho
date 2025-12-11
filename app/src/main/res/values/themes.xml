@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Tema original para Compose Activities -->
     <style name="Theme.InventoryWidget" parent="android:Theme.Material.Light.NoActionBar" />
+    
+    <!-- Tema compatible con AppCompat para Fragments + Navigation Component -->
+    <style name="Theme.InventoryWidget.AppCompat" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#FF9800</item>
+        <item name="colorPrimaryVariant">#F57C00</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#424242</item>
+        <item name="colorSecondaryVariant">#1E2328</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="android:statusBarColor">#424242</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
 </resources>

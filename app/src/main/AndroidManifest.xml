@@ -16,8 +16,10 @@
         android:theme="@style/Theme.InventoryWidget">
 
 
-        <!-- ✅ Home Activity (Compose Navigation) -->
-        <activity android:name=".HomeActivity" />
+        <!-- ✅ Home Activity (Fragments + Navigation Component) -->
+        <activity 
+            android:name=".HomeActivity"
+            android:theme="@style/Theme.InventoryWidget.AppCompat" />
 
         <activity android:name=".ProductDetailActivity" />
         

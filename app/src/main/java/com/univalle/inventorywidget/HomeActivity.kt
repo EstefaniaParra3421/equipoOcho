@@ -1,103 +1,91 @@
 package com.univalle.inventorywidget
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.univalle.inventorywidget.ui.addproduct.AddProductScreen
-import com.univalle.inventorywidget.ui.detail.ProductDetailScreen
-import com.univalle.inventorywidget.ui.editproduct.EditProductScreen
-import com.univalle.inventorywidget.ui.home.HomeInventoryScreen
-import com.univalle.inventorywidget.ui.theme.InventoryWidgetTheme
-import com.univalle.inventorywidget.viewmodel.ProductViewModel
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import com.univalle.inventorywidget.viewmodel.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Activity principal que gestiona la navegación del inventario
+ * HU 3.0: Ventana Home Inventario
+ * 
+ * Implementa Navigation Component con Fragments:
+ * - HomeInventoryFragment: Lista de productos (pantalla principal)
+ * - ProductDetailFragment: Detalle del producto (HU 5.0)
+ * - AddProductFragment: Agregar producto (HU 4.0)
+ */
 @AndroidEntryPoint
-class HomeActivity : ComponentActivity() {
+class HomeActivity : AppCompatActivity() {
+    
+    private val authViewModel: AuthViewModel by viewModels()
+    private lateinit var navController: NavController
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            InventoryWidgetTheme {
-                Surface(
-                    modifier = androidx.compose.ui.Modifier.fillMaxSize(),
-                    color = Color(0xFF1E2328)
-                ) {
-                    InventoryNavHost()
-                }
-            }
+        
+        // Criterio 1: Verificar si hay una sesión activa
+        authViewModel.checkSession()
+        
+        // Criterio 3: Si no hay sesión, redirigir al login
+        if (authViewModel.getCurrentUserEmail() == null) {
+            val intent = Intent(this, LoginActivityWithFirebase::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+            return
+        }
+        
+        setContentView(R.layout.activity_home)
+        
+        // Configurar el status bar con el mismo color que el toolbar (#424242)
+        setupStatusBar()
+        
+        setupNavigation()
+    }
+    
+    /**
+     * Configura el status bar de manera moderna sin deprecation warnings
+     */
+    private fun setupStatusBar() {
+        // Permitir que el contenido se extienda debajo del status bar
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
+        // Configurar color del status bar (#424242) igual que el toolbar
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            @Suppress("DEPRECATION")
+            window.statusBarColor = 0xFF424242.toInt()
+        }
+        
+        // Asegurar que los iconos del status bar sean blancos (light status bar)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = 
+                window.decorView.systemUiVisibility or android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            // Pero como el fondo es oscuro, queremos iconos blancos, así que no usamos LIGHT_STATUS_BAR
+            window.decorView.systemUiVisibility = 
+                window.decorView.systemUiVisibility and android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
         }
     }
-}
-
-@Composable
-fun InventoryNavHost() {
-    val navController: NavHostController = rememberNavController()
-
-    val sharedViewModel: ProductViewModel = hiltViewModel()
-
-    BackHandler {
-        android.os.Process.killProcess(android.os.Process.myPid())
+    
+    /**
+     * Configura el NavController con el NavHostFragment
+     */
+    private fun setupNavigation() {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        
+        navController = navHostFragment.navController
     }
-
-    NavHost(
-        navController = navController,
-        startDestination = "home_inventory_screen"
-    ) {
-        // HU 3.0: Home Inventario
-        composable("home_inventory_screen") {
-            HomeInventoryScreen(
-                navController = navController,
-                viewModel = sharedViewModel
-            )
-        }
-
-        // HU 4.0: Agregar Producto
-        composable("add_product_screen") {
-            AddProductScreen(
-                navController = navController,
-                viewModel = sharedViewModel
-            )
-        }
-
-        // HU 5.0: Detalle del Producto
-        composable(
-            route = "product_detail_screen/{productId}",
-            arguments = listOf(
-                navArgument("productId") { type = NavType.IntType }
-            )
-        ) { backStackEntry ->
-            val productId = backStackEntry.arguments?.getInt("productId") ?: -1
-            ProductDetailScreen(
-                productId = productId,
-                navController = navController,
-                viewModel = sharedViewModel
-            )
-        }
-
-        // HU 6.0: Editar Producto
-        composable(
-            route = "edit_product_screen/{productId}",
-            arguments = listOf(
-                navArgument("productId") { type = NavType.IntType }
-            )
-        ) { backStackEntry ->
-            val productId = backStackEntry.arguments?.getInt("productId") ?: -1
-            EditProductScreen(
-                productId = productId,
-                navController = navController,
-                viewModel = sharedViewModel
-            )
-        }
+    
+    /**
+     * Maneja la navegación hacia atrás cuando se presiona el botón "up"
+     */
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
