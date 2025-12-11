@@ -30,13 +30,15 @@ class ProductFirestoreDataSource(
 
     suspend fun getAllProducts(): List<Product> {
         val snapshot = productsRef.get().await()
-        return snapshot.documents.mapIndexedNotNull { index, document ->
+        // Usar toList() para asegurar un orden consistente
+        val documents = snapshot.documents.toList()
+        return documents.mapIndexedNotNull { index, document ->
             try {
                 // Leer los datos del documento como Map
                 val data = document.data
                 if (data != null) {
-                    // Intentar usar el ID del documento si es numérico, sino usar el índice + 1
-                    val documentId = document.id.toIntOrNull() ?: (index + 1)
+                    // Usar el índice + 1 como ID para mantener consistencia
+                    val documentId = index + 1
                     Product(
                         id = documentId,
                         code = (data["code"] as? Number)?.toInt() ?: 0,
@@ -49,6 +51,46 @@ class ProductFirestoreDataSource(
                 }
             } catch (e: Exception) {
                 null
+            }
+        }
+    }
+    
+    /**
+     * Elimina un producto de Firestore
+     * El productId es el índice + 1 que se asignó al leer los productos
+     * Necesitamos encontrar el documento correcto usando ese índice
+     * IMPORTANTE: El orden de los documentos debe ser consistente
+     */
+    suspend fun deleteProduct(productId: Int) {
+        // Primero obtener todos los productos para encontrar el producto con ese ID
+        val products = getAllProducts()
+        val productToDelete = products.find { it.id == productId }
+        
+        if (productToDelete == null) {
+            throw Exception("No se pudo encontrar el producto con ID: $productId")
+        }
+        
+        // Ahora buscar el documento en Firestore usando el código del producto
+        // (asumiendo que el código es único)
+        val snapshot = productsRef.get().await()
+        val documents = snapshot.documents.toList()
+        
+        // Buscar el documento que tenga el mismo código
+        val documentToDelete = documents.find { doc ->
+            val data = doc.data
+            val code = (data?.get("code") as? Number)?.toInt()
+            code == productToDelete.code
+        }
+        
+        if (documentToDelete != null) {
+            documentToDelete.reference.delete().await()
+        } else {
+            // Fallback: usar el índice como antes
+            val documentIndex = productId - 1
+            if (documentIndex >= 0 && documentIndex < documents.size) {
+                documents[documentIndex].reference.delete().await()
+            } else {
+                throw Exception("No se pudo encontrar el documento del producto con ID: $productId")
             }
         }
     }
