@@ -16,4 +16,13 @@
         <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+    
+    <!-- Estilo para TextInputLayout con borde blanco cuando tiene focus -->
+    <style name="TextInputLayoutWhiteBorder" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@android:color/white</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@android:color/white</item>
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+    </style>
 </resources>
