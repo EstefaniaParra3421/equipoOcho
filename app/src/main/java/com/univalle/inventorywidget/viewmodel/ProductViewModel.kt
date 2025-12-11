@@ -28,4 +28,10 @@ class ProductViewModel @Inject constructor(
             repository.refreshProducts()
         }
     }
+    
+    fun deleteProduct(productId: Int) {
+        viewModelScope.launch {
+            repository.delete(productId)
+        }
+    }
 }

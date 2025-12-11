@@ -16,6 +16,11 @@ class ProductRepository(
         firestoreDataSource.insertProduct(product)
         refreshProducts()
     }
+    
+    suspend fun delete(productId: Int) {
+        firestoreDataSource.deleteProduct(productId)
+        refreshProducts()
+    }
 
     suspend fun refreshProducts() {
         _products.value = firestoreDataSource.getAllProducts()

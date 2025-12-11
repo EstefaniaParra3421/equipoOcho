@@ -49,6 +49,15 @@
             app:destination="@id/homeInventoryFragment"
             app:popUpTo="@id/homeInventoryFragment"
             app:popUpToInclusive="false" />
+        
+        <!-- Acción para navegar a editar producto (HU 6.0) -->
+        <action
+            android:id="@+id/action_productDetailFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <!-- HU 4.0: Fragment Agregar Producto (placeholder) -->
