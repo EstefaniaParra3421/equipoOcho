@@ -42,6 +42,12 @@ class LoginActivityWithFirebase : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Criterio 10 y 13: Leer extras del Intent para saber el destino después del login
+        val returnTo = intent.getStringExtra("RETURN_TO")
+        val showBalance = intent.getBooleanExtra("SHOW_BALANCE", false)
+        val shouldReturnToWidget = returnTo == "WIDGET" && showBalance
+        // Si RETURN_TO == "HOME_INVENTORY", después del login va a HomeActivity (HU 3.0)
+
         // Verificar si ya hay una sesión activa
         authViewModel.checkSession()
 
@@ -53,11 +59,21 @@ class LoginActivityWithFirebase : FragmentActivity() {
                 // Observar si hay sesión activa
                 val currentEmail by authViewModel.currentUserEmail.observeAsState()
                 
-                // Si hay sesión activa, ir directamente a Home
+                // Si hay sesión activa, manejar según el destino
                 LaunchedEffect(currentEmail) {
                     if (currentEmail != null) {
-                        activity.startActivity(Intent(activity, HomeActivity::class.java))
-                        activity.finish()
+                        if (shouldReturnToWidget) {
+                            // Criterio 10: Volver al widget y mostrar el saldo
+                            val widgetIntent = Intent(activity, InventoryWidgetProvider::class.java).apply {
+                                action = InventoryWidgetProvider.ACTION_SHOW_BALANCE_AFTER_LOGIN
+                            }
+                            activity.sendBroadcast(widgetIntent)
+                            activity.finish() // Cerrar y volver al widget
+                        } else {
+                            // Ir a Home normalmente
+                            activity.startActivity(Intent(activity, HomeActivity::class.java))
+                            activity.finish()
+                        }
                     }
                 }
                 
@@ -68,16 +84,36 @@ class LoginActivityWithFirebase : FragmentActivity() {
                     FirebaseLoginScreen(
                         authViewModel = authViewModel,
                         onLoginSuccess = { email ->
-                            activity.startActivity(Intent(activity, HomeActivity::class.java))
-                            activity.finish()
+                            if (shouldReturnToWidget) {
+                                // Criterio 10: Volver al widget y mostrar el saldo
+                                val widgetIntent = Intent(activity, InventoryWidgetProvider::class.java).apply {
+                                    action = InventoryWidgetProvider.ACTION_SHOW_BALANCE_AFTER_LOGIN
+                                }
+                                activity.sendBroadcast(widgetIntent)
+                                activity.finish() // Cerrar y volver al widget
+                            } else {
+                                // Ir a Home normalmente
+                                activity.startActivity(Intent(activity, HomeActivity::class.java))
+                                activity.finish()
+                            }
                         }
                     )
                 } else {
                     // Mostrar pantalla de login biométrico
                     BiometricLoginScreen(
                         onAuthenticated = {
-                            activity.startActivity(Intent(activity, HomeActivity::class.java))
-                            activity.finish()
+                            if (shouldReturnToWidget) {
+                                // Criterio 10: Volver al widget y mostrar el saldo
+                                val widgetIntent = Intent(activity, InventoryWidgetProvider::class.java).apply {
+                                    action = InventoryWidgetProvider.ACTION_SHOW_BALANCE_AFTER_LOGIN
+                                }
+                                activity.sendBroadcast(widgetIntent)
+                                activity.finish() // Cerrar y volver al widget
+                            } else {
+                                // Ir a Home normalmente
+                                activity.startActivity(Intent(activity, HomeActivity::class.java))
+                                activity.finish()
+                            }
                         },
                         onUseEmailPassword = {
                             showFirebaseLogin = true
