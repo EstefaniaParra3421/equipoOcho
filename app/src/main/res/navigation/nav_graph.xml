@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeInventoryFragment">
+
+    <!-- HU 3.0: Fragment Home Inventario (pantalla principal de productos) -->
+    <!-- NOTA: Si HomeInventoryFragment falla, cambia a HomeInventoryFragmentTemp -->
+    <fragment
+        android:id="@+id/homeInventoryFragment"
+        android:name="com.univalle.inventorywidget.fragment.HomeInventoryFragment"
+        android:label="Inventario"
+        tools:layout="@layout/fragment_home_inventory">
+        
+        <!-- Acción para navegar al detalle del producto (HU 5.0) -->
+        <action
+            android:id="@+id/action_homeInventoryFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        
+        <!-- Acción para navegar a agregar producto (HU 4.0) -->
+        <action
+            android:id="@+id/action_homeInventoryFragment_to_addProductFragment"
+            app:destination="@id/addProductFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <!-- HU 5.0: Fragment Detalle del Producto (placeholder) -->
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="com.univalle.inventorywidget.fragment.DetailFragment"
+        android:label="Detalle del Producto"
+        tools:layout="@layout/fragment_detail">
+        
+        <argument
+            android:name="productId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        
+        <action
+            android:id="@+id/action_productDetailFragment_to_homeInventoryFragment"
+            app:destination="@id/homeInventoryFragment"
+            app:popUpTo="@id/homeInventoryFragment"
+            app:popUpToInclusive="false" />
+        
+        <!-- Acción para navegar a editar producto (HU 6.0) -->
+        <action
+            android:id="@+id/action_productDetailFragment_to_editProductFragment"
+            app:destination="@id/editProductFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <!-- HU 4.0: Fragment Agregar Producto (placeholder) -->
+    <fragment
+        android:id="@+id/addProductFragment"
+        android:name="com.univalle.inventorywidget.fragment.AddFragment"
+        android:label="Agregar Producto"
+        tools:layout="@layout/fragment_add">
+        
+        <action
+            android:id="@+id/action_addProductFragment_to_homeInventoryFragment"
+            app:destination="@id/homeInventoryFragment"
+            app:popUpTo="@id/homeInventoryFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- HU 6.0: Fragment Editar Producto -->
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.univalle.inventorywidget.fragment.EditProductFragment"
+        android:label="Editar Producto"
+        tools:layout="@layout/fragment_edit_product">
+        
+        <argument
+            android:name="productId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        
+        <action
+            android:id="@+id/action_editProductFragment_to_homeInventoryFragment"
+            app:destination="@id/homeInventoryFragment"
+            app:popUpTo="@id/homeInventoryFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+</navigation>
+
