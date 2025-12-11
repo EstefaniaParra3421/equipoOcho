@@ -1,30 +1,55 @@
 package com.univalle.inventorywidget.ui.home
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.univalle.inventorywidget.HomeActivity
+import com.univalle.inventorywidget.LoginActivityWithFirebase
+import com.univalle.inventorywidget.viewmodel.AuthViewModel
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeInventoryScreen(
     navController: NavController,
-    viewModel: ProductViewModel
+    viewModel: ProductViewModel,
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val products by viewModel.allProducts.observeAsState(initial = null)
+    val context = LocalContext.current
+    
+    // Observar productos desde el ViewModel (StateFlow)
+    val products by viewModel.products.collectAsState()
+    
+    // Estado de carga
+    var isLoading by remember { mutableStateOf(true) }
+    
+    // Cargar productos al iniciar
+    LaunchedEffect(Unit) {
+        isLoading = true
+        viewModel.loadProducts()
+        isLoading = false
+    }
 
     Scaffold(
         topBar = {
@@ -32,10 +57,20 @@ fun HomeInventoryScreen(
                 title = { Text("Inventario", color = Color.White) },
                 actions = {
                     IconButton(onClick = {
-                        // navController.navigate("login_screen") { popUpTo(0) }
+                        // Cerrar sesión en Firebase
+                        authViewModel.logOut()
+                        
+                        // Navegar a la pantalla de login
+                        val intent = Intent(context, LoginActivityWithFirebase::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        context.startActivity(intent)
+                        
+                        // Finalizar la actividad actual
+                        (context as? HomeActivity)?.finish()
                     }) {
-                        Icon(Icons.Default.Logout, contentDescription = "Cerrar sesión", tint = Color.White)
+                        Icon(Icons.Filled.Logout, contentDescription = "Cerrar sesión", tint = Color.White)
                     }
+
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF424242))
             )
@@ -48,7 +83,11 @@ fun HomeInventoryScreen(
                 containerColor = Color(0xFFFF9800),
                 contentColor = Color.White
             ) {
-                Text("+")
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Agregar producto",
+                    tint = Color.White
+                )
             }
         },
         containerColor = Color(0xCC000000)
@@ -60,17 +99,20 @@ fun HomeInventoryScreen(
                 .background(Color(0xCC000000))
         ) {
             when {
-                products == null -> {
-                    // Aún cargando
+                isLoading -> {
+                    // Mostrando progress circular naranja mientras carga
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Color(0xFFFF9800))
+                        CircularProgressIndicator(
+                            color = Color(0xFFFF9800),
+                            strokeWidth = 4.dp
+                        )
                     }
                 }
-                products?.isEmpty() == true -> {
-                    // Sin productos
+                products.isEmpty() -> {
+                    // Sin productos después de cargar
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -94,7 +136,13 @@ fun HomeInventoryScreen(
                     }
                 }
                 else -> {
-                    products?.let { productList ->
+                    run {
+                        val productList = products
+                        // Formato de número colombiano (HU 1.0)
+                        val numberFormat = NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CO"))
+                        numberFormat.minimumFractionDigits = 2
+                        numberFormat.maximumFractionDigits = 2
+                        
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -104,25 +152,44 @@ fun HomeInventoryScreen(
                                 Card(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(vertical = 4.dp)
+                                        .padding(vertical = 8.dp)
                                         .clickable {
                                             navController.navigate("product_detail_screen/${product.id}")
                                         },
-                                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                                    shape = RoundedCornerShape(12.dp)
                                 ) {
                                     Row(
                                         modifier = Modifier
                                             .padding(16.dp)
                                             .fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Column {
-                                            Text(product.name, color = Color.Black)
-                                            Text("ID: ${product.id}", color = Color.Gray)
+                                        // Columna izquierda: Nombre del producto (arriba) e ID (abajo)
+                                        Column(
+                                            modifier = Modifier.weight(1f)
+                                        ) {
+                                            Text(
+                                                text = product.name,
+                                                color = Color.Black,
+                                                fontSize = 16.sp,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Text(
+                                                text = "ID: ${product.id}",
+                                                color = Color.Gray,
+                                                fontSize = 14.sp
+                                            )
                                         }
+                                        
+                                        // Precio en la parte central derecha (naranja)
                                         Text(
-                                            text = "$ ${product.price}",
-                                            color = Color(0xFFFF9800)
+                                            text = "$ ${numberFormat.format(product.price)}",
+                                            color = Color(0xFFFF9800),
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.Bold
                                         )
                                     }
                                 }

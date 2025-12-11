@@ -3,7 +3,7 @@ package com.univalle.inventorywidget.ui.addproduct
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,12 +16,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.univalle.inventorywidget.data.model.Product
 import com.univalle.inventorywidget.viewmodel.ProductViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProductScreen(
     navController: NavController,
-    viewModel: ProductViewModel
+    viewModel: ProductViewModel = hiltViewModel()
 ) {
     var code by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -29,7 +30,10 @@ fun AddProductScreen(
     var quantity by remember { mutableStateOf("") }
 
     val isButtonEnabled =
-        code.isNotBlank() && name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
+        code.length == 4 &&
+                name.isNotBlank() &&
+                price.isNotBlank() &&
+                quantity.isNotBlank()
 
     Scaffold(
         topBar = {
@@ -37,11 +41,7 @@ fun AddProductScreen(
                 title = { Text("Agregar producto", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Atrás",
-                            tint = Color.White
-                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Atrás", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -49,58 +49,42 @@ fun AddProductScreen(
                 )
             )
         },
-        containerColor = Color(0xCC000000)
+        containerColor = Color(0xCC000000) // Fondo solicitado
     ) { padding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Campo Código del producto
+            // Campo Código
             OutlinedTextField(
                 value = code,
                 onValueChange = {
                     if (it.length <= 4 && it.all(Char::isDigit)) code = it
                 },
-                label = { Text("Código producto", color = Color.White) },
+                label = { Text("Código producto") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Gray,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White
-                )
+                colors = textFieldColors()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // Campo Nombre del artículo
+            // Campo Nombre
             OutlinedTextField(
                 value = name,
                 onValueChange = {
                     if (it.length <= 40) name = it
                 },
-                label = { Text("Nombre artículo", color = Color.White) },
+                label = { Text("Nombre artículo") },
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Gray,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White
-                )
+                colors = textFieldColors()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             // Campo Precio
             OutlinedTextField(
@@ -108,21 +92,13 @@ fun AddProductScreen(
                 onValueChange = {
                     if (it.length <= 20 && it.all(Char::isDigit)) price = it
                 },
-                label = { Text("Precio", color = Color.White) },
+                label = { Text("Precio") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Gray,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White
-                )
+                colors = textFieldColors()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             // Campo Cantidad
             OutlinedTextField(
@@ -130,44 +106,37 @@ fun AddProductScreen(
                 onValueChange = {
                     if (it.length <= 4 && it.all(Char::isDigit)) quantity = it
                 },
-                label = { Text("Cantidad", color = Color.White) },
+                label = { Text("Cantidad") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Gray,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White
-                )
+                colors = textFieldColors()
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
-            // Botón Guardar
+            // BOTÓN GUARDAR
             Button(
                 onClick = {
-                    val newProduct = Product(
+                    val p = Product(
                         code = code.toInt(),
                         name = name,
                         price = price.toDouble(),
                         quantity = quantity.toInt()
                     )
-                    viewModel.insertProduct(newProduct)
-                    navController.popBackStack()
+
+                    viewModel.insertProduct(p)
+                    navController.popBackStack() // vuelve a HU 3.0
                 },
                 enabled = isButtonEnabled,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFF9800),
-                    disabledContainerColor = Color.Gray
-                ),
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF3C00),
+                    disabledContainerColor = Color.Gray
+                )
             ) {
                 Text(
-                    text = "Guardar",
+                    "Guardar",
                     color = Color.White,
                     fontWeight = if (isButtonEnabled) FontWeight.Bold else FontWeight.Normal
                 )
@@ -175,3 +144,14 @@ fun AddProductScreen(
         }
     }
 }
+
+@Composable
+fun textFieldColors() = TextFieldDefaults.colors(
+    focusedContainerColor = Color.Transparent,
+    unfocusedContainerColor = Color.Transparent,
+    focusedIndicatorColor = Color.White,
+    unfocusedIndicatorColor = Color.Gray,
+    cursorColor = Color.White,
+    focusedLabelColor = Color.White,
+    unfocusedLabelColor = Color.White
+)

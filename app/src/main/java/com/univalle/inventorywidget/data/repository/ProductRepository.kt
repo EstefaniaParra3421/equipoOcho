@@ -1,22 +1,23 @@
 package com.univalle.inventorywidget.data.repository
 
-import androidx.lifecycle.LiveData
-import com.univalle.inventorywidget.data.dao.ProductDao
+import com.univalle.inventorywidget.data.datasource.ProductFirestoreDataSource
 import com.univalle.inventorywidget.data.model.Product
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
-class ProductRepository(private val productDao: ProductDao) {
+class ProductRepository(
+    private val firestoreDataSource: ProductFirestoreDataSource
+) {
 
-    val allProducts: LiveData<List<Product>> = productDao.getAllProducts()
-
-    suspend fun getProductCount(): Int {
-        return productDao.getProductCount()
-    }
+    private val _products = MutableStateFlow<List<Product>>(emptyList())
+    val products: StateFlow<List<Product>> get() = _products
 
     suspend fun insert(product: Product) {
-        productDao.insertProduct(product)
+        firestoreDataSource.insertProduct(product)
+        refreshProducts()
     }
 
-    suspend fun delete(product: Product) {
-        productDao.deleteProduct(product)
+    suspend fun refreshProducts() {
+        _products.value = firestoreDataSource.getAllProducts()
     }
 }
