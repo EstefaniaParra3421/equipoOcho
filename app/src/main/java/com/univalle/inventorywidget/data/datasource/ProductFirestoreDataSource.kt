@@ -56,6 +56,47 @@ class ProductFirestoreDataSource(
     }
     
     /**
+     * Actualiza un producto en Firestore
+     * Busca el documento por código y lo actualiza
+     */
+    suspend fun updateProduct(product: Product) {
+        val snapshot = productsRef.get().await()
+        val documents = snapshot.documents.toList()
+        
+        // Buscar el documento que tenga el mismo código
+        val documentToUpdate = documents.find { doc ->
+            val data = doc.data
+            val code = (data?.get("code") as? Number)?.toInt()
+            code == product.code
+        }
+        
+        if (documentToUpdate != null) {
+            // Actualizar el documento con los nuevos datos
+            val productMap = hashMapOf(
+                "code" to product.code,
+                "name" to product.name,
+                "price" to product.price,
+                "quantity" to product.quantity
+            )
+            documentToUpdate.reference.set(productMap).await()
+        } else {
+            // Fallback: usar el índice como antes
+            val documentIndex = product.id - 1
+            if (documentIndex >= 0 && documentIndex < documents.size) {
+                val productMap = hashMapOf(
+                    "code" to product.code,
+                    "name" to product.name,
+                    "price" to product.price,
+                    "quantity" to product.quantity
+                )
+                documents[documentIndex].reference.set(productMap).await()
+            } else {
+                throw Exception("No se pudo encontrar el documento del producto con ID: ${product.id}")
+            }
+        }
+    }
+    
+    /**
      * Elimina un producto de Firestore
      * El productId es el índice + 1 que se asignó al leer los productos
      * Necesitamos encontrar el documento correcto usando ese índice
