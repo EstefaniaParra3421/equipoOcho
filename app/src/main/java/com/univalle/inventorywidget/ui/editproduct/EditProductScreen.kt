@@ -4,7 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -27,8 +27,9 @@ fun EditProductScreen(
     navController: NavController,
     viewModel: ProductViewModel
 ) {
-    val products by viewModel.allProducts.observeAsState(initial = null)
-    val product = products?.find { it.id == productId }
+    //comentado porque ya no se usa room (adaptar a firestone)
+    //val products by viewModel.allProducts.observeAsState(initial = null)
+    //val product = products?.find { it.id == productId }
     val context = LocalContext.current
 
     // Estados para los campos editables
@@ -37,18 +38,18 @@ fun EditProductScreen(
     var quantity by remember { mutableStateOf("") }
 
     // Cargar datos del producto cuando esté disponible
-    LaunchedEffect(product) {
+    /*LaunchedEffect(product) {
         if (product != null) {
             name = product.name
             price = product.price.toString()
             quantity = product.quantity.toString()
         }
-    }
+    }*/
 
     // Validar que todos los campos estén llenos
     val isButtonEnabled = name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
 
-    if (product == null) {
+    /*if (product == null) {
         // Producto no encontrado o aún cargando
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -57,7 +58,7 @@ fun EditProductScreen(
             CircularProgressIndicator(color = Color(0xFFFF9800))
         }
         return
-    }
+    }*/
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -77,7 +78,7 @@ fun EditProductScreen(
                     navigationIcon = {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                 contentDescription = "Regresar",
                                 tint = Color.White
                             )
@@ -100,7 +101,7 @@ fun EditProductScreen(
             ) {
                 // Campo ID del producto (no editable)
                 OutlinedTextField(
-                    value = product.id.toString(),
+                    value = "",//product.id.toString(),
                     onValueChange = {}, // No editable
                     label = { Text("ID del producto", color = Color.White) },
                     enabled = false, // Deshabilitado
@@ -203,13 +204,13 @@ fun EditProductScreen(
                     onClick = {
                         try {
                             val updatedProduct = Product(
-                                id = product.id,
-                                code = product.code,
+                                id = 0,//product.id,
+                                code = 0,//product.code,
                                 name = name.trim(),
                                 price = price.toDouble(),
                                 quantity = quantity.toInt()
                             )
-                            viewModel.updateProduct(updatedProduct)
+                            //viewModel.updateProduct(updatedProduct)
                             Toast.makeText(context, "Producto actualizado", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         } catch (e: Exception) {

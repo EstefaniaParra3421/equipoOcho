@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">InventoryWidget</string>
-    <string name="widget_description">Widget para gestionar tu inventario</string>
+    <string name="widget_description">Widget de inventario para gestionar tus productos</string>
 </resources>

@@ -7,11 +7,16 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+import javax.inject.Inject
+import javax.inject.Singleton
+
 /**
  * Repositorio para manejar la autenticación con Firebase
  */
-class FirebaseAuthRepository {
-    private val firebaseAuth = FirebaseAuth.getInstance()
+@Singleton
+class FirebaseAuthRepository @Inject constructor(
+    private val firebaseAuth: FirebaseAuth
+) {
 
     /**
      * Registra un nuevo usuario en Firebase Authentication

@@ -6,29 +6,26 @@ import androidx.room.Room
 import com.univalle.inventorywidget.data.database.AppDatabase
 import com.univalle.inventorywidget.data.model.Product
 import com.univalle.inventorywidget.data.repository.ProductRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProductViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class ProductViewModel @Inject constructor(
+    private val repository: ProductRepository
+) : ViewModel() {
 
-    private val db = Room.databaseBuilder(
-        application,
-        AppDatabase::class.java,
-        "inventory_db"
-    ).build()
+    val products = repository.products
 
-    private val repository = ProductRepository(db.productDao())
-
-    val allProducts: LiveData<List<Product>> = repository.allProducts
-
-    fun insertProduct(product: Product) = viewModelScope.launch {
-        repository.insert(product)
+    fun insertProduct(product: Product) {
+        viewModelScope.launch {
+            repository.insert(product)
+        }
     }
 
-    fun updateProduct(product: Product) = viewModelScope.launch {
-        repository.update(product)
-    }
-
-    fun deleteProduct(product: Product) = viewModelScope.launch {
-        repository.delete(product)
+    fun loadProducts() {
+        viewModelScope.launch {
+            repository.refreshProducts()
+        }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,12 +28,14 @@ import androidx.fragment.app.FragmentActivity
 import com.univalle.inventorywidget.ui.auth.FirebaseLoginScreen
 import com.univalle.inventorywidget.ui.theme.InventoryWidgetTheme
 import com.univalle.inventorywidget.viewmodel.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Activity de login que soporta:
  * - Autenticación biométrica (huella/rostro)
  * - Autenticación con Firebase (email/contraseña)
  */
+@AndroidEntryPoint
 class LoginActivityWithFirebase : FragmentActivity() {
     private val authViewModel: AuthViewModel by viewModels()
     
@@ -41,17 +44,23 @@ class LoginActivityWithFirebase : FragmentActivity() {
 
         // Verificar si ya hay una sesión activa
         authViewModel.checkSession()
-        val currentEmail = authViewModel.getCurrentUserEmail()
-        
-        if (currentEmail != null) {
-            // Si hay sesión activa, ir directamente a Home
-            startActivity(Intent(this, HomeActivity::class.java))
-            finish()
-            return
-        }
 
+        // Capturar referencia de la Activity para usar en lambdas
+        val activity = this
+        
         setContent {
             InventoryWidgetTheme {
+                // Observar si hay sesión activa
+                val currentEmail by authViewModel.currentUserEmail.observeAsState()
+                
+                // Si hay sesión activa, ir directamente a Home
+                LaunchedEffect(currentEmail) {
+                    if (currentEmail != null) {
+                        activity.startActivity(Intent(activity, HomeActivity::class.java))
+                        activity.finish()
+                    }
+                }
+                
                 var showFirebaseLogin by remember { mutableStateOf(false) }
                 
                 if (showFirebaseLogin) {
@@ -59,16 +68,16 @@ class LoginActivityWithFirebase : FragmentActivity() {
                     FirebaseLoginScreen(
                         authViewModel = authViewModel,
                         onLoginSuccess = { email ->
-                            startActivity(Intent(this, HomeActivity::class.java))
-                            finish()
+                            activity.startActivity(Intent(activity, HomeActivity::class.java))
+                            activity.finish()
                         }
                     )
                 } else {
                     // Mostrar pantalla de login biométrico
                     BiometricLoginScreen(
                         onAuthenticated = {
-                            startActivity(Intent(this, HomeActivity::class.java))
-                            finish()
+                            activity.startActivity(Intent(activity, HomeActivity::class.java))
+                            activity.finish()
                         },
                         onUseEmailPassword = {
                             showFirebaseLogin = true

@@ -7,13 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.univalle.inventorywidget.data.model.UserRequest
 import com.univalle.inventorywidget.data.model.UserResponse
 import com.univalle.inventorywidget.data.repository.FirebaseAuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * ViewModel para manejar la lógica de autenticación con Firebase
  */
-class AuthViewModel : ViewModel() {
-    private val authRepository = FirebaseAuthRepository()
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authRepository: FirebaseAuthRepository
+) : ViewModel() {
     
     private val _registerResult = MutableLiveData<UserResponse>()
     val registerResult: LiveData<UserResponse> = _registerResult
@@ -28,6 +32,8 @@ class AuthViewModel : ViewModel() {
      * Registra un nuevo usuario en Firebase
      */
     fun registerUser(userRequest: UserRequest) {
+        // Limpiar resultado anterior
+        _registerResult.value = null
         viewModelScope.launch {
             authRepository.registerUser(userRequest) { userResponse ->
                 _registerResult.value = userResponse
@@ -42,10 +48,14 @@ class AuthViewModel : ViewModel() {
      * Inicia sesión con email y contraseña
      */
     fun loginUser(email: String, password: String) {
-        authRepository.loginUser(email, password) { success, emailOrError ->
-            _loginResult.value = Pair(success, emailOrError)
-            if (success) {
-                _currentUserEmail.value = emailOrError
+        // Limpiar resultado anterior
+        _loginResult.value = null
+        viewModelScope.launch {
+            authRepository.loginUser(email, password) { success, emailOrError ->
+                _loginResult.value = Pair(success, emailOrError)
+                if (success) {
+                    _currentUserEmail.value = emailOrError
+                }
             }
         }
     }
