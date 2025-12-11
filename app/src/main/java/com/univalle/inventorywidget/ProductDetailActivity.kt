@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -82,7 +82,7 @@ fun ProductDetailScreen(
     val total = productPrice * productQuantity
     
     // Formatear números con separadores de miles
-    val numberFormat = NumberFormat.getNumberInstance(Locale("es", "CO"))
+    val numberFormat = NumberFormat.getNumberInstance(Locale.forLanguageTag("es-CO"))
     numberFormat.maximumFractionDigits = 2
     
     val formattedPrice = numberFormat.format(productPrice)
@@ -102,7 +102,7 @@ fun ProductDetailScreen(
             navigationIcon = {
                 IconButton(onClick = onBack) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Regresar",
                         tint = Color.White
                     )
@@ -144,7 +144,7 @@ fun ProductDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
                     
-                    Divider(color = Color.LightGray)
+                    HorizontalDivider(color = Color.LightGray)
                     
                     // Precio
                     Text(
@@ -159,7 +159,7 @@ fun ProductDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
                     
-                    Divider(color = Color.LightGray)
+                    HorizontalDivider(color = Color.LightGray)
                     
                     // Cantidad
                     Text(
@@ -174,7 +174,7 @@ fun ProductDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
                     
-                    Divider(color = Color.LightGray)
+                    HorizontalDivider(color = Color.LightGray)
                     
                     // Total (precio x cantidad)
                     Text(
@@ -252,7 +252,8 @@ fun ProductDetailScreen(
                             price = productPrice,
                             quantity = productQuantity
                         )
-                        viewModel.deleteProduct(product)
+                        //comentado porque ya no se usa room agregarf metodos al firestone
+                        //viewModel.deleteProduct(product)
                         Toast.makeText(context, "Producto eliminado", Toast.LENGTH_SHORT).show()
                         showDeleteDialog = false
                         onBack()
