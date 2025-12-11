@@ -8,8 +8,6 @@ import com.univalle.inventorywidget.data.repository.AuthRepository
 import com.univalle.inventorywidget.data.repository.FirebaseAuthRepository
 import com.univalle.inventorywidget.data.repository.ProductRepository
 import com.univalle.inventorywidget.domain.repository.AuthRepositoryImpl
-import com.univalle.inventorywidget.domain.usecase.LoginUseCase
-import com.univalle.inventorywidget.domain.usecase.RegisterUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,14 +31,6 @@ object AppModule {
     @Singleton
     fun provideRepository(dataSource: FirebaseAuthDataSource): AuthRepository =
         AuthRepositoryImpl(dataSource)
-
-    @Provides
-    @Singleton
-    fun provideLoginUseCase(repo: AuthRepository) = LoginUseCase(repo)
-
-    @Provides
-    @Singleton
-    fun provideRegisterUseCase(repo: AuthRepository) = RegisterUseCase(repo)
 
     @Provides
     @Singleton

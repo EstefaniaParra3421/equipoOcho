@@ -128,9 +128,6 @@ dependencies {
     // Hilt Navigation Compose
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    // Autenticación biométrica
-    implementation(libs.biometric)
-
     // Pruebas
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
