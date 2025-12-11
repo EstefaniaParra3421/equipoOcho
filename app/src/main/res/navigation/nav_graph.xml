@@ -52,8 +52,8 @@
         
         <!-- Acción para navegar a editar producto (HU 6.0) -->
         <action
-            android:id="@+id/action_productDetailFragment_to_addProductFragment"
-            app:destination="@id/addProductFragment"
+            android:id="@+id/action_productDetailFragment_to_editProductFragment"
+            app:destination="@id/editProductFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@android:anim/slide_in_left"
@@ -69,6 +69,25 @@
         
         <action
             android:id="@+id/action_addProductFragment_to_homeInventoryFragment"
+            app:destination="@id/homeInventoryFragment"
+            app:popUpTo="@id/homeInventoryFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- HU 6.0: Fragment Editar Producto -->
+    <fragment
+        android:id="@+id/editProductFragment"
+        android:name="com.univalle.inventorywidget.fragment.EditProductFragment"
+        android:label="Editar Producto"
+        tools:layout="@layout/fragment_edit_product">
+        
+        <argument
+            android:name="productId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        
+        <action
+            android:id="@+id/action_editProductFragment_to_homeInventoryFragment"
             app:destination="@id/homeInventoryFragment"
             app:popUpTo="@id/homeInventoryFragment"
             app:popUpToInclusive="false" />

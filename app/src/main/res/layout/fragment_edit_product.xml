@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000"
+    android:fitsSystemWindows="true"
+    tools:context=".fragment.EditProductFragment">
+
+    <!-- LinearLayout para contener Toolbar + contenido -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
+
+        <!-- Toolbar gris (#424242) -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="56dp"
+            android:background="#424242"
+            android:elevation="4dp"
+            app:title="Editar Producto"
+            app:titleTextColor="@android:color/white"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@android:color/white" />
+
+        <!-- ScrollView para el contenido del formulario -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <!-- Código del producto (Criterio 2: No editable) -->
+                <TextView
+                    android:id="@+id/tvProductCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Id: 0"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="16dp"
+                    android:focusable="false"
+                    android:clickable="false"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <!-- Campo Nombre artículo (Criterio 6: Admite texto, máximo 40 caracteres incluyendo espacios) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilProductName"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:hint="Nombre artículo"
+                    app:hintTextColor="@color/hint_text_white"
+                    app:boxStrokeColor="@color/text_input_box_stroke_white"
+                    app:boxStrokeWidth="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvProductCode"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etProductName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLength="40"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Campo Precio (Criterio 7: Solo números, máximo 20 dígitos) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilProductPrice"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Precio"
+                    app:hintTextColor="@color/hint_text_white"
+                    app:boxStrokeColor="@color/text_input_box_stroke_white"
+                    app:boxStrokeWidth="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tilProductName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etProductPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="20"
+                        android:digits="0123456789"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Campo Cantidad (Criterio 8: Solo números, máximo 4 dígitos) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilProductQuantity"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Cantidad"
+                    app:hintTextColor="@color/hint_text_white"
+                    app:boxStrokeColor="@color/text_input_box_stroke_white"
+                    app:boxStrokeWidth="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tilProductPrice"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etProductQuantity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:digits="0123456789"
+                        android:textColor="@android:color/white"
+                        android:textColorHint="@android:color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Botón Editar (Criterio 5: Inactivo si algún campo está vacío) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditProduct"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Editar"
+                    android:layout_marginTop="32dp"
+                    android:enabled="false"
+                    android:backgroundTint="@color/button_save_enabled"
+                    android:textColor="@color/button_text_save"
+                    android:textStyle="bold"
+                    app:cornerRadius="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tilProductQuantity"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

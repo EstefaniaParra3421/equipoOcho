@@ -171,13 +171,11 @@ class DetailFragment : Fragment() {
             }
             
             // Criterio 4: Navegar a HU 6.0 (Ventana Editar Producto)
-            // Por ahora usamos AddFragment pasando el productId para modo edición
             val bundle = Bundle().apply {
                 putInt("productId", productId)
-                putBoolean("isEditMode", true)
             }
             findNavController().navigate(
-                R.id.action_productDetailFragment_to_addProductFragment,
+                R.id.action_productDetailFragment_to_editProductFragment,
                 bundle
             )
         }
