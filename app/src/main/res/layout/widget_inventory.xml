@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/negro_opaco"
+    android:background="@drawable/widget_background"
     android:padding="16dp"
     android:minHeight="120dp">
 
@@ -34,7 +34,7 @@
 
     <!-- SECCIÓN DERECHA: Pregunta + Saldo + Ojo -->
 
-    <!-- Ícono de ojo (arriba a la derecha) -->
+    <!-- Ícono de ojo abierto (Criterio 6) -->
     <ImageView
         android:id="@+id/iconEye"
         android:layout_width="28dp"
@@ -56,6 +56,7 @@
 
     <!-- Ícono de configuración naranja (abajo a la derecha) -->
 
+    <!-- Pregunta "¿Cuánto tengo de inventario?" (Criterio 4) -->
     <TextView
         android:id="@+id/txtQuestion"
         android:layout_width="wrap_content"
@@ -66,12 +67,12 @@
         android:layout_marginEnd="22dp"
         android:layout_toStartOf="@id/iconEye"
         android:layout_toEndOf="@id/logo"
-        android:gravity="right
-"
+        android:gravity="right"
         android:text="¿Cuánto tengo de inventario?"
         android:textColor="#FFFFFF"
         android:textSize="13sp" />
 
+    <!-- Saldo del inventario (Criterio 5) -->
     <TextView
         android:id="@+id/txtBalance"
         android:layout_width="wrap_content"
@@ -83,12 +84,12 @@
         android:layout_marginTop="7dp"
         android:layout_marginEnd="44dp"
         android:gravity="right"
-        android:text="$ * * * *"
+        android:text="$ ****"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <!-- Texto "Gestionar Inventario" -->
+    <!-- Ícono de gestión naranja (Criterio 12) -->
     <ImageView
         android:id="@+id/iconManage"
         android:layout_width="36dp"
@@ -102,6 +103,7 @@
         android:focusable="true"
         android:src="@drawable/ic_manage_inventory" />
 
+    <!-- Texto "Gestionar inventario" (Criterio 11) -->
     <TextView
         android:id="@+id/txtManage"
         android:layout_width="wrap_content"
@@ -115,7 +117,7 @@
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
-        android:text="Gestionar Inventario"
+        android:text="Gestionar inventario"
         android:textColor="#FFFFFF"
         android:textSize="13sp" />
 
