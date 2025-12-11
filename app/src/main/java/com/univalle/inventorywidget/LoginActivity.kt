@@ -99,7 +99,11 @@ fun LoginScreen(onAuthenticated: () -> Unit) {
                     .clickable {
                         val activity = context as? FragmentActivity
                         if (activity == null) {
-                            Toast.makeText(context, "No se pudo iniciar autenticación", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "No se pudo iniciar autenticación",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             return@clickable
                         }
 
@@ -122,14 +126,25 @@ fun LoginScreen(onAuthenticated: () -> Unit) {
                                             onAuthenticated()
                                         }
 
-                                        override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                                        override fun onAuthenticationError(
+                                            errorCode: Int,
+                                            errString: CharSequence
+                                        ) {
                                             super.onAuthenticationError(errorCode, errString)
-                                            Toast.makeText(context, "Error: $errString", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                context,
+                                                "Error: $errString",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
 
                                         override fun onAuthenticationFailed() {
                                             super.onAuthenticationFailed()
-                                            Toast.makeText(context, "Huella no reconocida", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                context,
+                                                "Huella no reconocida",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     }
                                 )
@@ -138,13 +153,32 @@ fun LoginScreen(onAuthenticated: () -> Unit) {
                             }
 
                             BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-                                Toast.makeText(context, "No hay hardware biométrico.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "No hay hardware biométrico.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
                             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-                                Toast.makeText(context, "Hardware biométrico no disponible.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Hardware biométrico no disponible.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
                             BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                                Toast.makeText(context, "No hay huellas registradas.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "No hay huellas registradas.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
                             else ->
-                                Toast.makeText(context, "Autenticación no disponible.", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Autenticación no disponible.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                         }
                     }
             )
